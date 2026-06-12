@@ -8,6 +8,8 @@ Utilice esta plantilla para registrar las decisiones de arquitectura tomadas
 **Para conseguir** ...
 **Aceptando que** ...
 
+
+
 ## 4. Uso de S3
 
 **En el contexto de** definir la funcionalidad de renombrar un archivo en S3
