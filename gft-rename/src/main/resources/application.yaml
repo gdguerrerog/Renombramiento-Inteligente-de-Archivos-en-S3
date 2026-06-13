@@ -10,3 +10,16 @@ spring:
     url: ${POSTGRES_URL}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
+
+app:
+  aws:
+    bucket-name: gft-rename-files-bucket-973008983665-us-east-2-an
+    sqs-queue-name: file-creation-to-rename
+  general:
+    receive-folder-name: receive
+    renamed-folder-name: renamed
+
+aws:
+  accessKeyId: ${AWS_ACCESS_KEY_ID}
+  secretAccessKey: ${AWS_SECRET_ACCESS_KEY_ID}
+  region: us-east-2
