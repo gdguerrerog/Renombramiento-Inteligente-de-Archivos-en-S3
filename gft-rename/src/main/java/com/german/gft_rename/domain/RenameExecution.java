@@ -18,5 +18,4 @@ public class RenameExecution {
     private final String inFileName;
     private final String outFileName;
     private final ExecutionResultType resultType;
-    private final String eventId;
 }

@@ -40,10 +40,9 @@ public class SQSS3EventConsumer {
         List<RenameExecution> execution = renameFile.renameFiles(records.stream().map(r -> {
                 String key = r.getS3().getObject().getKey();
                 String fileName = key.substring(key.indexOf("/") + 1);
-                String eventId = r.getS3().getObject().getSequencer();
                 Instant eventTime = r.getEventTime();
 
-                return new FileData(fileName, eventId, eventTime);
+                return new FileData(fileName, eventTime);
             })
             .toList()
         );

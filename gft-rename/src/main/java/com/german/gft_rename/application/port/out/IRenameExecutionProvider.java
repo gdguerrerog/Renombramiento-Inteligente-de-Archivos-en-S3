@@ -9,7 +9,8 @@ public interface IRenameExecutionProvider {
 
     RenameExecution createRenameExecution(RenameExecution renameExecution);
     List<RenameExecution> getAllRenameExecutions(ListRenameExecutionParams params);
-    Optional<RenameExecution> getByEventId(String eventId);
+    List<RenameExecution> getByInName(String inName);
+    List<RenameExecution> getByOutName(String outName);
 
     public record ListRenameExecutionParams(Integer page, Integer limit, Optional<String> inputFileName, Optional<String> outputFileName) {}
 }

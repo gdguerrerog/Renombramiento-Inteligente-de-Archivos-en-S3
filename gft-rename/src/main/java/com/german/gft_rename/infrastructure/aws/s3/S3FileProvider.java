@@ -1,6 +1,7 @@
 package com.german.gft_rename.infrastructure.aws.s3;
 
 import com.german.gft_rename.application.port.out.IFileProvider;
+import com.german.gft_rename.domain.FileData;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @Component
@@ -21,7 +23,7 @@ public class S3FileProvider implements IFileProvider {
     @Value("${app.aws.bucket-name}") private String bucketName;
 
     @Override
-    public List<String> listFiles(String folder) {
+    public List<FileData> listFiles(String folder) {
         ListObjectsV2Request request =
                 ListObjectsV2Request.builder()
                         .bucket(bucketName)
@@ -32,7 +34,11 @@ public class S3FileProvider implements IFileProvider {
 
         return response.contents()
                 .stream()
-                .map(S3Object::key)
+                .map(obj -> {
+                    String name = obj.key().substring(obj.key().indexOf("/") + 1);
+                    Instant creationDate = obj.lastModified();
+                    return new FileData(name, creationDate);
+                })
                 .toList();
     }
 

@@ -45,15 +45,16 @@ public class RenameFileService implements IRenameFileUseCase {
     }
 
     private RenameExecution processFile(FileData data, List<Rule> rules) {
-        Optional<RenameExecution> checkAlready = renameExecutionProvider.getByEventId(data.getEventId());
+        List<RenameExecution> checkAlready = renameExecutionProvider.getByInName(data.getName());
 
         // Check if is a retry event
-        if (checkAlready.isPresent()) {
-            switch (checkAlready.get().getResultType()) {
-                case SUCCESS: return checkAlready.get();
+        if (!checkAlready.isEmpty()) {
+            RenameExecution last = checkAlready.getLast();
+            switch (last.getResultType()) {
+                case SUCCESS: return last;
                 case DELETE_FAILED:
                 case UNMATCHED_DELETE_FAILED:
-                    return retryDelete(checkAlready.get());
+                    return retryDelete(last);
             }
         }
 

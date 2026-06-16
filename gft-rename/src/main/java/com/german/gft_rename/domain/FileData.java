@@ -9,6 +9,5 @@ import java.time.Instant;
 @Getter
 public class FileData {
     private final String name;
-    private final String eventId;
     private final Instant creationDate;
 }

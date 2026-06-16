@@ -36,7 +36,20 @@ public class RenameExecutionEntityManager implements IRenameExecutionProvider {
     }
 
     @Override
-    public Optional<RenameExecution> getByEventId(String eventId) {
-        return repository.findTopByEventIdOrderByExecutionTimeDesc(eventId).map(mapper::toRenameExecution);
+    public List<RenameExecution> getByInName(String inName) {
+        return repository.findByInFileName(inName)
+                .stream()
+                .map(mapper::toRenameExecution)
+                .toList();
     }
+
+    @Override
+    public List<RenameExecution> getByOutName(String outName) {
+        return repository.findByOutFileName(outName)
+                .stream()
+                .map(mapper::toRenameExecution)
+                .toList();
+    }
+
+
 }

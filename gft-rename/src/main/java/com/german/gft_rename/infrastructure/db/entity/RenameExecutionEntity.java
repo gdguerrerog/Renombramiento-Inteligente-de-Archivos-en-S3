@@ -24,7 +24,6 @@ public class RenameExecutionEntity {
     private Instant executionTime;
     private String inFileName;
     private String outFileName;
-    private String eventId;
 
     @Enumerated(EnumType.STRING)
     private ExecutionResultType resultType;
