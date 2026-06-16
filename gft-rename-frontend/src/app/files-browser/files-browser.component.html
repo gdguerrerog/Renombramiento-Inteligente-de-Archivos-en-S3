@@ -1,0 +1,121 @@
+<div class="files-browser-container">
+  <div class="files-header">
+    <h2>Files Management</h2>
+  </div>
+
+  <div class="tab-navigation">
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'toRename'"
+      (click)="setTab('toRename')"
+    >
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">To rename</span>
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'unmatched'"
+      (click)="setTab('unmatched')"
+    >
+      <span class="tab-icon">⚠️</span>
+      <span class="tab-label">Unmatched</span>
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'renamed'"
+      (click)="setTab('renamed')"
+    >
+      <span class="tab-icon">✅</span>
+      <span class="tab-label">Renamed</span>
+    </button>
+    <button class="tab-button refresh-btn" (click)="refreshCurrentTab()" title="Refresh current tab">
+      <span class="tab-icon">🔄</span>
+    </button>
+  </div>
+
+  <div class="tab-content">
+    <div *ngIf="activeTab === 'toRename'" class="tab-panel">
+      <div class="panel-header">
+        <h3>Files awaiting rename</h3>
+        <span class="badge">{{ toRename.length }}</span>
+      </div>
+
+      <div *ngIf="loading.toRename" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading files...</p>
+      </div>
+
+      <div *ngIf="error.toRename && !loading.toRename" class="error-state">
+        <p class="error-message">{{ error.toRename }}</p>
+      </div>
+
+      <div *ngIf="!loading.toRename && !error.toRename" class="file-list">
+        <div *ngIf="toRename.length === 0" class="empty-state">
+          <p>No files to rename</p>
+        </div>
+        <ul *ngIf="toRename.length > 0">
+          <li *ngFor="let file of toRename" class="file-item">
+            <span class="file-icon">📄</span>
+            <span class="file-name">{{ file.name }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'unmatched'" class="tab-panel">
+      <div class="panel-header">
+        <h3>Unmatched files</h3>
+        <span class="badge warning">{{ unmatched.length }}</span>
+      </div>
+
+      <div *ngIf="loading.unmatched" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading files...</p>
+      </div>
+
+      <div *ngIf="error.unmatched && !loading.unmatched" class="error-state">
+        <p class="error-message">{{ error.unmatched }}</p>
+      </div>
+
+      <div *ngIf="!loading.unmatched && !error.unmatched" class="file-list">
+        <div *ngIf="unmatched.length === 0" class="empty-state">
+          <p>No unmatched files</p>
+        </div>
+        <ul *ngIf="unmatched.length > 0">
+          <li *ngFor="let file of unmatched" class="file-item">
+            <span class="file-icon">⚠️</span>
+            <span class="file-name">{{ file.name }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'renamed'" class="tab-panel">
+      <div class="panel-header">
+        <h3>Successfully renamed</h3>
+        <span class="badge success">{{ renamed.length }}</span>
+      </div>
+
+      <div *ngIf="loading.renamed" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading files...</p>
+      </div>
+
+      <div *ngIf="error.renamed && !loading.renamed" class="error-state">
+        <p class="error-message">{{ error.renamed }}</p>
+      </div>
+
+      <div *ngIf="!loading.renamed && !error.renamed" class="file-list">
+        <div *ngIf="renamed.length === 0" class="empty-state">
+          <p>No renamed files yet</p>
+        </div>
+        <ul *ngIf="renamed.length > 0">
+          <li *ngFor="let file of renamed" class="file-item">
+            <span class="file-icon">✅</span>
+            <span class="file-name">{{ file.name }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

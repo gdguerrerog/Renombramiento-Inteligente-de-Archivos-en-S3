@@ -1,0 +1,19 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="header-content">
+      <h1>{{ title }}</h1>
+      <nav class="main-nav">
+        <a routerLink="/files" routerLinkActive="active" class="nav-link">
+          <span>📋</span> Files
+        </a>
+        <a routerLink="/rules" routerLinkActive="active" class="nav-link">
+          <span>⚙️</span> Rules
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
