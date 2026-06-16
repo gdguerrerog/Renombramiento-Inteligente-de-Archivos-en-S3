@@ -1,5 +1,7 @@
 package com.german.gft_rename.infrastructure.aws.sqs;
 
+import io.awspring.cloud.sqs.config.SqsMessageListenerContainerFactory;
+import io.awspring.cloud.sqs.listener.acknowledgement.handler.AcknowledgementMode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,5 +30,16 @@ public class SQSClientConfiguration {
                         )
                 )
                 .build();
+    }
+
+    @Bean
+    public SqsMessageListenerContainerFactory<Object> defaultSqsListenerContainerFactory(SqsAsyncClient sqsAsyncClient) {
+        SqsMessageListenerContainerFactory<Object> factory = new SqsMessageListenerContainerFactory<>();
+        factory.setSqsAsyncClient(sqsAsyncClient);
+
+        // Change default behavior from ON_SUCCESS to MANUAL
+        factory.configure(options -> options.acknowledgementMode(AcknowledgementMode.MANUAL));
+
+        return factory;
     }
 }

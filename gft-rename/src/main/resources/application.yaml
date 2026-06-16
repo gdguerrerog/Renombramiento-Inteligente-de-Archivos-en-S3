@@ -27,6 +27,7 @@ app:
   general:
     receive-folder-name: receive
     renamed-folder-name: renamed
+    unmatched-folder-name: unmatched
 
 aws:
   accessKeyId: ${AWS_ACCESS_KEY_ID}

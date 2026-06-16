@@ -34,7 +34,7 @@ public class RuleController {
     private final IRuleUseCase ruleUseCase;
 
     @PostMapping
-    @Operation(summary = "Create a new rule", description = "Creates a new business rule with the provided name")
+    @Operation(summary = "Create a new rule", description = "Creates a new renaming rule")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Rule created successfully",
                     content = @Content(schema = @Schema(implementation = Rule.class))),

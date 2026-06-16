@@ -19,6 +19,7 @@ public class RuleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(name = "ruleOrder")
     private Integer order;
     private String toCheck;
     private String toReplace;

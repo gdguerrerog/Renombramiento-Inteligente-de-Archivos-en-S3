@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import software.amazon.awssdk.services.s3.model.S3Object;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.util.List;
 
@@ -36,6 +34,55 @@ public class S3FileProvider implements IFileProvider {
                 .stream()
                 .map(S3Object::key)
                 .toList();
+    }
+
+    @Override
+    public void copyFile(String folderOriginal, String fileNameOriginal, String folderTarget, String fileNameTarget) {
+        CopyObjectRequest request =
+                CopyObjectRequest.builder()
+                        .sourceBucket(bucketName)
+                        .sourceKey(folderOriginal + "/" + fileNameOriginal)
+                        .destinationBucket(bucketName)
+                        .destinationKey(folderTarget + "/" + fileNameTarget)
+                        .build();
+
+        s3Client.copyObject(request);
+    }
+
+    @Override
+    public void deleteFile(String folder, String fileName) {
+        try {
+
+            s3Client.deleteObject(
+                    DeleteObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(folder + "/" + fileName)
+                            .build());
+
+        } catch (S3Exception e) {
+
+            if (e.statusCode() == 404) {
+                return; // already deleted
+            }
+
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean fileExists(String folder, String fileName) {
+        try {
+            s3Client.headObject(
+                    HeadObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(folder + "/" + fileName)
+                            .build());
+
+            return true;
+
+        } catch (NoSuchKeyException e) {
+            return false;
+        }
     }
 
 }

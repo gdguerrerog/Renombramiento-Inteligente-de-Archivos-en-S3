@@ -1,19 +1,18 @@
 package com.german.gft_rename.application.service;
 
+import com.german.gft_rename.application.port.in.IRuleExecutorUseCase;
 import com.german.gft_rename.domain.ExecutionResult;
 import com.german.gft_rename.domain.Rule;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
-public class RuleExecutorService implements IRuleExecutor {
+public class RuleExecutorService implements IRuleExecutorUseCase {
 
     private static final Pattern DATE_PATTERN = Pattern.compile("(AAAA|MM|DD){3}");
 
