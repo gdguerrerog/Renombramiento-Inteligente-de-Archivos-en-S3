@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./local/db/init:/docker-entrypoint-initdb.d
+    networks:
+      - gft-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME} -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gft-backend:
+    build:
+      context: ./gft-rename
+      dockerfile: Dockerfile
+    container_name: gft-backend
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_URL: ${POSTGRES_URL}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY_ID: ${AWS_SECRET_ACCESS_KEY_ID}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - gft-network
+
+  gft-frontend:
+    build:
+      context: ./gft-rename-frontend
+      dockerfile: Dockerfile
+    container_name: gft-frontend
+    ports:
+      - "80:80"
+    environment:
+      BACKEND_URL: http://gft-backend:8080
+    depends_on:
+      - gft-backend
+    networks:
+      - gft-network
+
+volumes:
+  postgres_data:
+
+networks:
+  gft-network:
+    driver: bridge

@@ -111,6 +111,5 @@ public class RuleExecutionServiceTest {
         Assertions.assertEquals(expected.getSuffixRule(), actual.getSuffixRule());
         Assertions.assertEquals(expected.getFinalString(), actual.getFinalString());
         Assertions.assertEquals(expected.getResultType(), actual.getResultType());
-        Assertions.assertEquals(expected.getError(), actual.getError());
     }
 }

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  HOST: 'https://api.gft-rename.com'
+  HOST: 'http://localhost:8080'
 };
