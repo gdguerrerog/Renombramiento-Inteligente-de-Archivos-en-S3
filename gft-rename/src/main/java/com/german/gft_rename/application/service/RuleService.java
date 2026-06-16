@@ -38,15 +38,13 @@ public class RuleService implements IRuleUseCase {
     }
 
     @Override
-    public Rule updateRule(final Rule rule) {
-        log.info("[RuleService] - updateRule: Updating rule with id: {}", rule.getId());
-        return ruleProvider.updateRule(rule);
+    public Optional<Rule> updateRule(Long id, String name, Integer order) {
+        return ruleProvider.getRuleById(id).map(rule -> {
+            rule.setName(name);
+            rule.setOrder(order);
+            return ruleProvider.updateRule(rule);
+        });
     }
 
-    @Override
-    public void deleteRuleById(final Long id) {
-        log.info("[RuleService] - deleteRuleById: Deleting rule with id: {}", id);
-        ruleProvider.deleteRuleById(id);
-    }
 }
 

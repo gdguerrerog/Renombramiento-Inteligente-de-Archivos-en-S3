@@ -12,8 +12,6 @@ public interface IRuleUseCase {
 
     List<Rule> getAllRules();
 
-    Rule updateRule(final Rule rule);
-
-    void deleteRuleById(final Long id);
+    Optional<Rule> updateRule(Long id, String name, Integer order);
 }
 

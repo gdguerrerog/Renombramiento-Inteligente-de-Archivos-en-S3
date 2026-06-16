@@ -9,6 +9,17 @@ Utilice esta plantilla para registrar las decisiones de arquitectura tomadas
 **Aceptando que** ...
 
 
+## 5. Algoritmo de normalización de nombres
+
+**En el contexto de** definir el funcionamiento exacto del algoritmo para normalizar los nombres
+**Teniendo en cuenta** 
+    - Que se deben poder editar prefijos y sufijos del nombre del archivo con las reglas creadas
+    - Que se debe remplazar cuando exista el formato de fecha
+    - Que en caso de que una regla no aplique se debe marcar el archivo como NO MAPEADO
+**Se decidió** marcar como no mapeado aquellos nombres que no cumplan ninguna regla a pesar de cumplir con el placeholder de cambio de fecha
+**Y se descartó** marcarlos como mapeados
+**Para conseguir** que no se marquen como mapeados archivos que pueden necesitar reglas adicionales para funcionar
+**Aceptando que** el requerimiento puede requerir que igual se marquen lo archivos con el placeholder a pesar de no cumplir con ninguna regla
 
 ## 4. Uso de S3
 

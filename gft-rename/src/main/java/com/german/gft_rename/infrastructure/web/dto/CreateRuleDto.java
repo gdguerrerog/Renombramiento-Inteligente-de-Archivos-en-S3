@@ -1,17 +1,14 @@
-package com.german.gft_rename.domain;
+package com.german.gft_rename.infrastructure.web.dto;
 
+import com.german.gft_rename.domain.RuleType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@RequiredArgsConstructor
-@AllArgsConstructor
-@Builder
-@Schema(name = "Rule", description = "Represents a rule for name processing")
-public class Rule {
-
-    @Schema(description = "Unique identifier for the rule", example = "1")
-    private final Long id;
+@Schema(name = "CreateRuleDto", description = "Create rule params")
+@Getter
+@Setter
+public class CreateRuleDto {
 
     @Schema(description = "Name of the rename rule", example = "Replace spaces with underscores")
     private String name;
@@ -20,12 +17,11 @@ public class Rule {
     private Integer order;
 
     @Schema(description = "The string to check against", example = "old_name")
-    private final String toCheck;
+    private String toCheck;
 
     @Schema(description = "The string to replace with", example = "new_name")
-    private final String toReplace;
+    private String toReplace;
 
     @Schema(description = "Rule type (PREFIX, SUFFIX)", example = "PREFIX")
-    private final RuleType type;
+    private RuleType type;
 }
-

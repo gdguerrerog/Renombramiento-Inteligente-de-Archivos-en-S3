@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +38,9 @@ public class RenameFileService implements IRenameFileUseCase {
 
     @Override
     public List<RenameExecution> renameFiles(List<FileData> files) {
-        List<Rule> rules = ruleProvider.getAllRules();
+        ArrayList<Rule> rules = new ArrayList<>(ruleProvider.getAllRules());
+        rules.sort(Comparator.comparing(Rule::getOrder));
+        
         return files.stream().map(f -> processFile(f, rules)).toList();
     }
 
