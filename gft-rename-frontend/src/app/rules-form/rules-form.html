@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Create rule</h2>
+<mat-dialog-content>
+    <form [formGroup]="form" class="form-container">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input formControlName="name" matInput/>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>To check</mat-label>
+            <input formControlName="toCheck" matInput/>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>To replace</mat-label>
+            <input formControlName="toReplace" matInput/>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="type">
+                <mat-option value="PREFIX">Prefix</mat-option>
+                <mat-option value="SUFFIX">Suffix</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button matButton (click)="cancel()">Cancel</button>
+    <button matButton [mat-dialog-close]="submit()" cdkFocusInitial>Submit</button>
+</mat-dialog-actions>
+
+

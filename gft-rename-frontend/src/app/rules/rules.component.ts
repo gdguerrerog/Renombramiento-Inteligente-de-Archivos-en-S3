@@ -1,106 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { RulesService } from '../services/rules.service';
 import { Rule } from '../domain/rule.interface';
 import { combineLatest } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { RulesForm } from '../rules-form/rules-form';
 
 @Component({
   selector: 'app-rules',
   standalone: true,
-  imports: [CommonModule, DragDropModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.scss']
+  styleUrls: ['./rules.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RulesComponent implements OnInit {
-  rules: Rule[] = [];
-  error = '';
+export class RulesComponent implements AfterViewInit {
+  rules: WritableSignal<Rule[]> = signal([]);
 
-  // Modal state
-  showModal = false;
-  formData = {
-    name: '',
-    toCheck: '',
-    toReplace: '',
-    type: 'PREFIX' as 'PREFIX' | 'SUFFIX'
-  };
-  submitting = false;
+  constructor(private rulesService: RulesService, private dialog: MatDialog) {}
 
-  constructor(private rulesService: RulesService) {}
-
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.loadRules();
   }
 
+
   private loadRules() {
-    this.error = '';
     this.rulesService.getRules().subscribe(rules => {
-      this.rules = rules.sort((a, b) => a.order - b.order);
+      this.rules.set(rules.sort((a, b) => a.order - b.order));
     });
   }
 
-  openModal() {
-    this.showModal = true;
-    this.resetForm();
-  }
-
-  closeModal() {
-    this.showModal = false;
-    this.resetForm();
-  }
-
-  private resetForm() {
-    this.formData = {
-      name: '',
-      toCheck: '',
-      toReplace: '',
-      type: 'PREFIX'
-    };
-    this.submitting = false;
-  }
-
-  submitForm() {
-    if (!this.formData.name || !this.formData.toCheck || !this.formData.toReplace) {
-      alert('Please fill in all fields');
-      return;
-    }
-
-    this.submitting = true;
-    const order = this.rules.length;
-
-    this.rulesService.createRule(
-      this.formData.name,
-      order,
-      this.formData.toCheck,
-      this.formData.toReplace,
-      this.formData.type
-    ).subscribe(
-      (newRule) => {
-        this.rules = [...this.rules, newRule].sort((a, b) => a.order - b.order);
-        this.closeModal();
-        this.submitting = false;
-      },
-    );
-  }
-
-  drop(event: CdkDragDrop<Rule[]>) {
-    if (event.previousIndex !== event.currentIndex) {
-      this.swap(event.previousIndex, event.currentIndex);
-    }
-  }
-
   private swap(index1: number, index2: number) {
-    const movedRule = this.rules[index1];
-    const currentRule = this.rules[index2];
+    const movedRule = this.rules()[index1];
+    const currentRule = this.rules()[index2];
 
     combineLatest([
       this.rulesService.updateRule(movedRule.id, movedRule.name, index2),
       this.rulesService.updateRule(currentRule.id, currentRule.name, index1)
     ]).subscribe(([newMovedRule, newCurrentRule]) => {
-      this.rules[index2] = newMovedRule;
-      this.rules[index1] = newCurrentRule;
-      this.rules = [...this.rules].sort((a, b) => a.order - b.order);
+      this.rules.set(this.rules().map((rule, i) => {
+        if (i === index1) return newCurrentRule;
+        if (i === index2) return newMovedRule;
+        return rule;
+      }).sort((a, b) => a.order - b.order));
     });
   }
 
@@ -111,9 +54,18 @@ export class RulesComponent implements OnInit {
   }
 
   moveDown(index: number) {
-    if (index < this.rules.length - 1) {
+    if (index < this.rules().length - 1) {
       this.swap(index, index + 1);
     }
+  }
+
+  openCreateRule() {
+    this.dialog.open(RulesForm).afterClosed().subscribe(result => {
+      if (!result) return;
+      this.rulesService.createRule(result.name, this.rules().length, result.toCheck, result.toReplace, result.type).subscribe((rule) => {
+        this.rules.set([...this.rules(), rule].sort((a, b) => a.order - b.order))
+      })
+    })
   }
 
 }

@@ -34,88 +34,202 @@
   </div>
 
   <div class="tab-content">
-    <div *ngIf="activeTab === 'toRename'" class="tab-panel">
-      <div class="panel-header">
-        <h3>Files awaiting rename</h3>
-        <span class="badge">{{ toRename.length }}</span>
-      </div>
+    @switch (activeTab) {
 
-      <div *ngIf="loading.toRename" class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading files...</p>
-      </div>
+      @case('toRename') {
+        <div class="tab-panel">
+          <div class="panel-header">
+            <h3>Files awaiting rename</h3>
+            <span class="badge">{{ toRename().length }}</span>
+          </div>
 
-      <div *ngIf="error.toRename && !loading.toRename" class="error-state">
-        <p class="error-message">{{ error.toRename }}</p>
-      </div>
+          @if(loading().toRename != 'loaded') {
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading files...</p>
+            </div>
+          } @else{
+            <div class="file-list">
+            @if (toRename().length === 0) {
 
-      <div *ngIf="!loading.toRename && !error.toRename" class="file-list">
-        <div *ngIf="toRename.length === 0" class="empty-state">
-          <p>No files to rename</p>
+              <div class="empty-state">
+                <p>No files to rename</p>
+              </div>
+            } @else {
+              <ul>
+                @for(file of toRename(); track file.name) {
+                  <li class="file-item" [class.expanded]="expandedFileName() === file.name" (click)="toggleFileExpansion(file.name)">
+                    <span class="expand-icon">{{ expandedFileName() === file.name ? '▼' : '▶' }}</span>
+                    <span class="file-icon">📄</span>
+                    <span class="file-name">{{ file.name }}</span>
+                  </li>
+                  @if (expandedFileName() === file.name) {
+                    <div class="executions-panel">
+                      @if (file.executions && file.executions.length > 0) {
+                        <div class="executions-list">
+                          @for (execution of file.executions; track execution.id) {
+                            <div class="execution-item" [class]="'execution-' + execution.resultType.toLowerCase()">
+                              <div class="execution-header">
+                                <span class="execution-status">{{ execution.resultType }}</span>
+                                <span class="execution-time">{{ execution.executionTime }}</span>
+                              </div>
+                              <div class="execution-details">
+                                <div class="file-change">
+                                  <span class="label">From:</span>
+                                  <span class="file-path">{{ execution.inFileName }}</span>
+                                </div>
+                                <div class="file-change">
+                                  <span class="label">To:</span>
+                                  <span class="file-path">{{ execution.outFileName }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      } @else {
+                        <div class="no-executions">No executions recorded</div>
+                      }
+                    </div>
+                  }
+                }
+              </ul>
+            }
+            
+          </div>
+          }
+
+          
         </div>
-        <ul *ngIf="toRename.length > 0">
-          <li *ngFor="let file of toRename" class="file-item">
-            <span class="file-icon">📄</span>
-            <span class="file-name">{{ file.name }}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
+      }
+      @case ('unmatched') {
+        <div class="tab-panel">
+          <div class="panel-header">
+            <h3>Files awaiting rename</h3>
+            <span class="badge">{{ unmatched().length }}</span>
+          </div>
 
-    <div *ngIf="activeTab === 'unmatched'" class="tab-panel">
-      <div class="panel-header">
-        <h3>Unmatched files</h3>
-        <span class="badge warning">{{ unmatched.length }}</span>
-      </div>
+          @if(loading().unmatched != 'loaded') {
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading files...</p>
+            </div>
+          } @else{
+            <div class="file-list">
+            @if (unmatched().length === 0) {
 
-      <div *ngIf="loading.unmatched" class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading files...</p>
-      </div>
+              <div class="empty-state">
+                <p>No files to rename</p>
+              </div>
+            } @else {
+              <ul>
+                @for(file of unmatched(); track file.name) {
+                  <li class="file-item" [class.expanded]="expandedFileName() === file.name" (click)="toggleFileExpansion(file.name)">
+                    <span class="expand-icon">{{ expandedFileName() === file.name ? '▼' : '▶' }}</span>
+                    <span class="file-icon">📄</span>
+                    <span class="file-name">{{ file.name }}</span>
+                  </li>
+                  @if (expandedFileName() === file.name) {
+                    <div class="executions-panel">
+                      @if (file.executions && file.executions.length > 0) {
+                        <div class="executions-list">
+                          @for (execution of file.executions; track execution.id) {
+                            <div class="execution-item" [class]="'execution-' + execution.resultType.toLowerCase()">
+                              <div class="execution-header">
+                                <span class="execution-status">{{ execution.resultType }}</span>
+                                <span class="execution-time">{{ execution.executionTime }}</span>
+                              </div>
+                              <div class="execution-details">
+                                <div class="file-change">
+                                  <span class="label">From:</span>
+                                  <span class="file-path">{{ execution.inFileName }}</span>
+                                </div>
+                                <div class="file-change">
+                                  <span class="label">To:</span>
+                                  <span class="file-path">{{ execution.outFileName }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      } @else {
+                        <div class="no-executions">No executions recorded</div>
+                      }
+                    </div>
+                  }
+                }
+              </ul>
+            }
+            
+          </div>
+          }
 
-      <div *ngIf="error.unmatched && !loading.unmatched" class="error-state">
-        <p class="error-message">{{ error.unmatched }}</p>
-      </div>
-
-      <div *ngIf="!loading.unmatched && !error.unmatched" class="file-list">
-        <div *ngIf="unmatched.length === 0" class="empty-state">
-          <p>No unmatched files</p>
+          
         </div>
-        <ul *ngIf="unmatched.length > 0">
-          <li *ngFor="let file of unmatched" class="file-item">
-            <span class="file-icon">⚠️</span>
-            <span class="file-name">{{ file.name }}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
+      }
+      @case('renamed') {
+       <div class="tab-panel">
+          <div class="panel-header">
+            <h3>Files awaiting rename</h3>
+            <span class="badge">{{ renamed().length }}</span>
+          </div>
 
-    <div *ngIf="activeTab === 'renamed'" class="tab-panel">
-      <div class="panel-header">
-        <h3>Successfully renamed</h3>
-        <span class="badge success">{{ renamed.length }}</span>
-      </div>
+          @if(loading().renamed != 'loaded') {
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading files...</p>
+            </div>
+          } @else{
+            <div class="file-list">
+            @if (renamed().length === 0) {
 
-      <div *ngIf="loading.renamed" class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading files...</p>
-      </div>
-
-      <div *ngIf="error.renamed && !loading.renamed" class="error-state">
-        <p class="error-message">{{ error.renamed }}</p>
-      </div>
-
-      <div *ngIf="!loading.renamed && !error.renamed" class="file-list">
-        <div *ngIf="renamed.length === 0" class="empty-state">
-          <p>No renamed files yet</p>
+              <div class="empty-state">
+                <p>No files to rename</p>
+              </div>
+            } @else {
+              <ul>
+                @for(file of renamed(); track file.name) {
+                  <li class="file-item" [class.expanded]="expandedFileName() === file.name" (click)="toggleFileExpansion(file.name)">
+                    <span class="expand-icon">{{ expandedFileName() === file.name ? '▼' : '▶' }}</span>
+                    <span class="file-icon">📄</span>
+                    <span class="file-name">{{ file.name }}</span>
+                  </li>
+                  @if (expandedFileName() === file.name) {
+                    <div class="executions-panel">
+                      @if (file.executions && file.executions.length > 0) {
+                        <div class="executions-list">
+                          @for (execution of file.executions; track execution.id) {
+                            <div class="execution-item" [class]="'execution-' + execution.resultType.toLowerCase()">
+                              <div class="execution-header">
+                                <span class="execution-status">{{ execution.resultType }}</span>
+                                <span class="execution-time">{{ execution.executionTime }}</span>
+                              </div>
+                              <div class="execution-details">
+                                <div class="file-change">
+                                  <span class="label">From:</span>
+                                  <span class="file-path">{{ execution.inFileName }}</span>
+                                </div>
+                                <div class="file-change">
+                                  <span class="label">To:</span>
+                                  <span class="file-path">{{ execution.outFileName }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      } @else {
+                        <div class="no-executions">No executions recorded</div>
+                      }
+                    </div>
+                  }
+                }
+              </ul>
+            }
+            
+          </div>
+        }
         </div>
-        <ul *ngIf="renamed.length > 0">
-          <li *ngFor="let file of renamed" class="file-item">
-            <span class="file-icon">✅</span>
-            <span class="file-name">{{ file.name }}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
+      }
+    }
+    
   </div>
 </div>

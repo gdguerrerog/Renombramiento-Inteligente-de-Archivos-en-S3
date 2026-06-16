@@ -1,31 +1,18 @@
 <div class="rules-container">
   <div class="rules-header">
     <h2>Rename Rules</h2>
-    <button class="btn-primary" title="Add new rule" (click)="openModal()">
+    <button class="btn-primary" title="Add new rule" (click)="openCreateRule()">
       <span class="icon">➕</span> Add Rule
     </button>
   </div>
 
   <div class="rules-list-wrapper">
-    <div class="rules-info">
-      <p class="info-text">
-        Drag to reorder or use arrow buttons. Rules are applied in order.
-      </p>
-    </div>
 
     <div
-      cdkDropList
-      #rulesList="cdkDropList"
-      [cdkDropListData]="rules"
-      cdkDropListSortingDisabled
-      (cdkDropListDropped)="drop($event)"
       class="rules-list"
     >
-      @for (rule of rules; track rule.id) {
-        <div cdkDrag class="rule-item">
-          <div class="rule-drag-handle" cdkDragHandle title="Drag to reorder">
-            <span class="handle-icon">⋮⋮</span>
-          </div>
+      @for (rule of rules(); track rule.id) {
+        <div class="rule-item">
 
           <div class="rule-content">
             <div class="rule-header">
@@ -55,7 +42,7 @@
             <button
               class="btn-icon"
               (click)="moveDown($index)"
-              [disabled]="$index === rules.length - 1"
+              [disabled]="$index === rules().length - 1"
               title="Move down"
             >
               ⬇️
@@ -67,82 +54,5 @@
   </div>
 </div>
 
-<!-- Modal Overlay -->
- @if(showModal) {
-  <div  class="modal-overlay" (click)="closeModal()"></div>
-}
 
-<!-- Modal -->
-@if (showModal) {
-
-<div class="modal">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>Create New Rule</h2>
-      <button class="modal-close" (click)="closeModal()">&times;</button>
-    </div>
-
-    <form class="modal-form" (ngSubmit)="submitForm()">
-      <div class="form-group">
-        <label for="name">Rule Name *</label>
-        <input
-          type="text"
-          id="name"
-          [(ngModel)]="formData.name"
-          name="name"
-          placeholder="e.g., Temporary Files Cleanup"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="toCheck">Pattern to Match *</label>
-        <input
-          type="text"
-          id="toCheck"
-          [(ngModel)]="formData.toCheck"
-          name="toCheck"
-          placeholder="e.g., *.tmp or IMG_*"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="toReplace">Replace With *</label>
-        <input
-          type="text"
-          id="toReplace"
-          [(ngModel)]="formData.toReplace"
-          name="toReplace"
-          placeholder="e.g., *.backup or photo_*"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="type">Match Type</label>
-        <select id="type" [(ngModel)]="formData.type" name="type">
-          <option value="PREFIX">Prefix</option>
-          <option value="SUFFIX">Suffix</option>
-        </select>
-      </div>
-
-      <div class="modal-actions">
-        <button
-          type="button"
-          class="btn-secondary"
-          (click)="closeModal()"
-          [disabled]="submitting"
-        >
-          Cancel
-        </button>
-        <button type="submit" class="btn-primary" [disabled]="submitting">
-          <span *ngIf="!submitting">Create Rule</span>
-          <span *ngIf="submitting">Creating...</span>
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-}
 

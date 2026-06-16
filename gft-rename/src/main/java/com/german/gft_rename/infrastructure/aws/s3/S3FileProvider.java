@@ -27,6 +27,7 @@ public class S3FileProvider implements IFileProvider {
         ListObjectsV2Request request =
                 ListObjectsV2Request.builder()
                         .bucket(bucketName)
+                        .prefix(folder + "/")
                         .build();
 
         ListObjectsV2Response response =

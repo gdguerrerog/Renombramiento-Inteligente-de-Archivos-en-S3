@@ -28,7 +28,7 @@ public class FileRetrieverService implements IFileRetriever {
     private final IRenameExecutionProvider renameExecutionProvider;
 
     @Override
-    public List<FileWithStatus> getToRenameFiles() {
+    public List<FileWithStatus> getReceiveFiles() {
         return fileProvider.listFiles(receiveFolderName)
                 .stream()
                 .filter(f -> !f.getName().isBlank())

@@ -14,4 +14,5 @@ export interface RenameExecution {
 export interface FileWithStatus {
   name: string;
   uploadDate: string;
+  executions: RenameExecution[]
 }

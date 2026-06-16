@@ -103,8 +103,10 @@ public class RenameFileService implements IRenameFileUseCase {
 
     private boolean copy(String folderOriginal, String fileNameOriginal, String folderTarget,  String fileNameTarget) {
         try {
-            fileProvider.copyFile(folderOriginal, fileNameOriginal, folderTarget, fileNameTarget);
-            log.info("Success copy file from {} to {}", folderOriginal + "/" + fileNameOriginal, folderTarget + "/" + fileNameTarget);
+            if (fileProvider.fileExists(folderOriginal, fileNameOriginal)) {
+                fileProvider.copyFile(folderOriginal, fileNameOriginal, folderTarget, fileNameTarget);
+                log.info("Success copy file from {} to {}", folderOriginal + "/" + fileNameOriginal, folderTarget + "/" + fileNameTarget);
+            }
             return true;
         } catch (Exception ex) {
             log.error("Error copy file from {} to {}", folderOriginal + "/" + fileNameOriginal, folderTarget + "/" + fileNameTarget, ex);
