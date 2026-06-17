@@ -14,7 +14,7 @@ import {MatSelectModule} from '@angular/material/select';
 
 @Component({
   selector: 'app-rules-form',
-  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatSelectModule],
+  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogActions, MatSelectModule],
   templateUrl: './rules-form.html',
   styleUrl: './rules-form.scss',
 })

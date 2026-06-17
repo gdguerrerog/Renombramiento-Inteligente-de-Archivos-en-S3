@@ -47,7 +47,7 @@ public class SQSS3EventConsumer {
             .toList()
         );
 
-        boolean success = execution.stream().allMatch(f -> f.getResultType() == ExecutionResultType.SUCCESS);
+        boolean success = execution.stream().allMatch(f -> f.getResultType() == ExecutionResultType.SUCCESS || f.getResultType() == ExecutionResultType.UNMATCHED);
         if (success) {
             acknowledgement.acknowledge();
             log.info("Successfully processed SQS message from SQS queue");
